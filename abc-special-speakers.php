@@ -87,10 +87,10 @@ add_filter( 'get_the_archive_title', 'filter_special_speaker_page_title' );
 
 // Sort archive
 function sort_special_speakers_by_date( $query ) {
-    if ( is_post_type_archive( 'special_speaker' ) && ! is_admin() ) {
-        $query->set( 'orderby',     'meta_value_num' );
+    if ( ( is_post_type_archive( 'special_speaker' ) || 'special_speaker' == $query->get( 'post_type' ) && ! $query->get( 'orderby' ) ) && ! is_admin() ) {
+        $query->set( 'orderby',     'meta_value' );
         $query->set( 'order',       'ASC' );
-        $query->set( 'meta_key',    'begin_date' );
+        $query->set( 'meta_key',    'sort_order' );
     }
 
     return $query;
