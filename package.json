@@ -1,5 +1,5 @@
 {
-  "name": "abc-yearly-events",
+  "name": "abc-special-events",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ambassador-baptist-college/abc-yearly-events.git"
+    "url": "git+https://github.com/ambassador-baptist-college/abc-special-events.git"
   },
   "author": "AndrewRMinion Design",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ambassador-baptist-college/abc-yearly-events/issues"
+    "url": "https://github.com/ambassador-baptist-college/abc-special-events/issues"
   },
-  "homepage": "https://github.com/ambassador-baptist-college/abc-yearly-events#readme",
+  "homepage": "https://github.com/ambassador-baptist-college/abc-special-events#readme",
   "devDependencies": {
     "autoprefixer": "^6.3.4",
     "cssnano": "^3.5.2",
