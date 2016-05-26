@@ -14,7 +14,7 @@ module.exports = function (grunt) {
     uglify: {
         custom: {
             files: {
-                'js/course-search.min.js': ['js/course-search.js'],
+                'js/speaker-backend.min.js': ['js/speaker-backend.js'],
             },
         },
     },
@@ -24,7 +24,6 @@ module.exports = function (grunt) {
                 style: 'compressed'
             },
             files: {
-                "css/course-search.min.css" : "css/course-search.scss",
             }
         }
     },

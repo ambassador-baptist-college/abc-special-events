@@ -97,3 +97,8 @@ function sort_special_speakers_by_date( $query ) {
 }
 add_filter( 'pre_get_posts', 'sort_special_speakers_by_date' );
 
+// Add backend JS
+function add_speaker_backend_js() {
+    wp_enqueue_script( 'speaker-backend', plugins_url( 'js/speaker-backend.min.js', __FILE__ ), array( 'jquery' ) );
+}
+add_action( 'admin_enqueue_scripts', 'add_speaker_backend_js' );
