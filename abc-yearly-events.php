@@ -75,15 +75,15 @@ function yearly_events_post_type() {
 add_action( 'init', 'yearly_events_post_type', 0 );
 
 // Modify the page title
-function filter_course_page_title( $title, $id = NULL ) {
+function filter_yearly_event_page_title( $title, $id = NULL ) {
     if ( is_post_type_archive( 'yearly_event' ) ) {
           $title = 'Yearly Events';
     }
 
     return $title;
 }
-add_filter( 'custom_title', 'filter_course_page_title' );
-add_filter( 'get_the_archive_title', 'filter_course_page_title' );
+add_filter( 'custom_title', 'filter_yearly_event_page_title' );
+add_filter( 'get_the_archive_title', 'filter_yearly_event_page_title' );
 
 // Sort archive
 function sort_yearly_events_by_date( $query ) {
