@@ -96,3 +96,55 @@ function sort_special_events_by_date( $query ) {
     return $query;
 }
 add_filter( 'pre_get_posts', 'sort_special_events_by_date' );
+
+// Add custom archive template
+function get_special_event_archive_template( $archive_template ) {
+    global $post;
+    if ( is_post_type_archive ( 'special_event' ) ) {
+        $archive_template = dirname( __FILE__ ) . '/archive-special_event.php';
+    }
+    return $archive_template;
+}
+add_filter( 'archive_template', 'get_special_event_archive_template' ) ;
+
+// Add custom single template
+function get_special_event_single_template( $single_template ) {
+    global $post;
+
+    if ( 'special_event' == $post->post_type ) {
+        $single_template = dirname( __FILE__ ) . '/single-special_event.php';
+    }
+    return $single_template;
+}
+add_filter( 'single_template', 'get_special_event_single_template' );
+
+// Add custom entry meta
+function special_event_entry_meta() {
+    printf( '<span class="event-dates">%1$s</span>',
+            get_special_event_date_format( $post )
+    );
+}
+
+// Helper function to format dates
+function get_special_event_date_format( $post ) {
+    // date
+    $begin_date = DateTime::createFromFormat( 'Ymd', get_field( 'begin_date' ) );
+    $begin_date_formatted = $begin_date->format( 'F j' );
+
+    if ( get_field( 'end_date' ) ) {
+        $end_date = DateTime::createFromFormat( 'Ymd', get_field( 'end_date' ) );
+
+        if ( $begin_date->format( 'Y' ) != $end_date->format( 'Y' ) ) {
+            $begin_date_formatted .= $begin_date->format( ', Y' );
+        }
+        $end_date_formatted = $end_date->format( 'j, Y' );
+        if ( $begin_date->format( 'm' ) != $end_date->format( 'm' ) ) {
+            $end_date_formatted = $end_date->format( 'F ' ) . $end_date_formatted;
+        }
+        $end_date_formatted = '&ndash;' . $end_date_formatted;
+    } else {
+        $end_date_formatted = NULL;
+    }
+
+    return $begin_date_formatted . $end_date_formatted;
+}
