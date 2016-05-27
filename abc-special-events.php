@@ -53,7 +53,7 @@ function special_events_post_type() {
         'label'                 => 'Special Event',
         'description'           => 'Special Events',
         'labels'                => $labels,
-        'supports'              => array( 'title', 'editor', 'thumbnail', 'custom-fields', 'page-attributes', ),
+        'supports'              => array( 'title', 'editor', 'thumbnail', 'custom-fields', 'page-attributes', 'excerpt', ),
         'hierarchical'          => true,
         'public'                => true,
         'show_ui'               => true,
