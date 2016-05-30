@@ -261,3 +261,60 @@ function get_special_event_date_format( $post ) {
 
     return $begin_date_formatted . $end_date_formatted . $microdata;
 }
+
+// Shortcode for speakers
+function abc_special_speakers_shortcode( $atts ) {
+    global $post;
+
+    $atts = shortcode_atts( array(
+        'align'     => 'left',
+    ), $atts, 'special_speakers' );
+    $shortcode_output = NULL;
+
+    return abc_speakers_for_shortcode( get_field( 'special_speaker' ), $atts );
+}
+add_shortcode( 'special_speakers', 'abc_special_speakers_shortcode' );
+
+// Shortcode for speakers
+function abc_keynote_speakers_shortcode( $atts ) {
+    global $post;
+
+    $atts = shortcode_atts( array(
+        'align'     => 'left',
+    ), $atts, 'keynote_speakers' );
+    $shortcode_output = NULL;
+
+    return abc_speakers_for_shortcode( get_field( 'keynote_speaker' ), $atts );
+}
+add_shortcode( 'keynote_speakers', 'abc_keynote_speakers_shortcode' );
+
+// Helper function for shortcodes
+function abc_speakers_for_shortcode( $speakers_array, $atts ) {
+    $output = NULL;
+
+    $speaker_args = array(
+        'post_type'         => 'special_speaker',
+        'post_status'       => 'publish',
+        'posts_per_page'    => -1,
+        'post__in'          => $speakers_array,
+        'order'             => 'ASC',
+        'orderby'           => 'meta_value',
+        'meta_key'          => 'sort_order',
+    );
+
+    $special_speaker_query = new WP_Query( $speaker_args );
+
+    if ( $special_speaker_query->have_posts() ) {
+        while ( $special_speaker_query->have_posts() ) {
+            $special_speaker_query->the_post();
+            $output .= '<figure class="wp-caption align' . $atts['align'] . '">
+                ' . get_the_post_thumbnail( get_the_ID(), 'faculty' ) . '
+                <figcaption class="wp-caption-text">' . get_the_title() . '</figcaption>
+            </figure>';
+        }
+    }
+
+    wp_reset_query();
+
+    return $output;
+}
