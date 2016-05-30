@@ -143,9 +143,28 @@ function print_special_event_meta_info() {
     if ( get_field( 'special_speaker' ) ) {
         echo '<h3>Special Speakers</h3>
         <ul class="event-speakers">';
-        foreach ( get_field( 'special_speaker' ) as $this_speaker ) {
-            echo '<li>' . get_the_title( $this_speaker ) . '</li>';
+
+        $speaker_args = array(
+            'post_type'         => 'special_speaker',
+            'post_status'       => 'publish',
+            'posts_per_page'    => -1,
+            'post__in'          => get_field( 'special_speaker' ),
+            'order'             => 'ASC',
+            'orderby'           => 'meta_value',
+            'meta_key'          => 'sort_order',
+        );
+
+        $special_speaker_query = new WP_Query( $speaker_args );
+
+        if ( $special_speaker_query->have_posts() ) {
+            while ( $special_speaker_query->have_posts() ) {
+                $special_speaker_query->the_post();
+                echo '<li title="' . get_the_excerpt() . '">' . get_the_title() . '</li>';
+            }
         }
+
+        wp_reset_query();
+
         echo '</ul>';
     }
 }
