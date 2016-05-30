@@ -159,13 +159,16 @@ function print_special_event_meta_info() {
         <ul class="event-speakers">';
 
         $speaker_args = array(
-            'post_type'         => 'special_speaker',
-            'post_status'       => 'publish',
-            'posts_per_page'    => -1,
-            'post__in'          => get_field( 'keynote_speaker' ),
-            'order'             => 'ASC',
-            'orderby'           => 'meta_value',
-            'meta_key'          => 'sort_order',
+            'post_type'              => 'special_speaker',
+            'post_status'            => 'publish',
+            'posts_per_page'         => -1,
+            'post__in'               => get_field( 'keynote_speaker' ),
+            'order'                  => 'ASC',
+            'orderby'                => 'meta_value',
+            'meta_key'               => 'sort_order',
+            'cache_results'          => true,
+            'update_post_meta_cache' => true,
+            'update_post_term_cache' => true,
         );
 
         $special_speaker_query = new WP_Query( $speaker_args );
@@ -188,13 +191,16 @@ function print_special_event_meta_info() {
         <ul class="event-speakers">';
 
         $speaker_args = array(
-            'post_type'         => 'special_speaker',
-            'post_status'       => 'publish',
-            'posts_per_page'    => -1,
-            'post__in'          => get_field( 'special_speaker' ),
-            'order'             => 'ASC',
-            'orderby'           => 'meta_value',
-            'meta_key'          => 'sort_order',
+            'post_type'              => 'special_speaker',
+            'post_status'            => 'publish',
+            'posts_per_page'         => -1,
+            'post__in'               => get_field( 'special_speaker' ),
+            'order'                  => 'ASC',
+            'orderby'                => 'meta_value',
+            'meta_key'               => 'sort_order',
+            'cache_results'          => true,
+            'update_post_meta_cache' => true,
+            'update_post_term_cache' => true,
         );
 
         $special_speaker_query = new WP_Query( $speaker_args );
@@ -307,13 +313,16 @@ function abc_speakers_for_shortcode( $speakers_array, $atts ) {
     $output = NULL;
 
     $speaker_args = array(
-        'post_type'         => 'special_speaker',
-        'post_status'       => 'publish',
-        'posts_per_page'    => -1,
-        'post__in'          => $speakers_array,
-        'order'             => 'ASC',
-        'orderby'           => 'meta_value',
-        'meta_key'          => 'sort_order',
+        'post_type'              => 'special_speaker',
+        'post_status'            => 'publish',
+        'posts_per_page'         => -1,
+        'post__in'               => $speakers_array,
+        'order'                  => 'ASC',
+        'orderby'                => 'meta_value',
+        'meta_key'               => 'sort_order',
+        'cache_results'          => true,
+        'update_post_meta_cache' => true,
+        'update_post_term_cache' => true,
     );
 
     $special_speaker_query = new WP_Query( $speaker_args );
