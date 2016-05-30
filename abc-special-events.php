@@ -119,11 +119,37 @@ function get_special_event_single_template( $single_template ) {
 add_filter( 'single_template', 'get_special_event_single_template' );
 
 // Add custom entry meta
-function special_event_entry_meta() {
-    printf( '<span class="event-dates">%1$s</span>',
-            get_special_event_date_format( $post )
-    );
+function print_special_event_meta_info() {
+    // date
+    if ( get_field( 'begin_date' ) ) {
+        printf( '<h3>%1$s</h3>
+        <p class="event-dates">%2$s</p>',
+                get_field( 'end_date' ) ? 'Dates' : 'Date',
+                get_special_event_date_format( $post )
+        );
+    }
+
+    // location
+    if ( get_field( 'location' ) ) {
+        $location = get_field( 'location' );
+
+        printf( '<h3>Location</h3>
+        <p class="location"><a href="https://www.google.com/maps/search/%1$s" target="_blank">%1$s</a></p>',
+               $location['address']
+        );
+    }
+
+    // speaker
+    if ( get_field( 'special_speaker' ) ) {
+        echo '<h3>Special Speakers</h3>
+        <ul class="event-speakers">';
+        foreach ( get_field( 'special_speaker' ) as $this_speaker ) {
+            echo '<li>' . get_the_title( $this_speaker ) . '</li>';
+        }
+        echo '</ul>';
+    }
 }
+add_action( 'special_event_entry_meta', 'print_special_event_meta_info' );
 
 // Helper function to format dates
 function get_special_event_date_format( $post ) {

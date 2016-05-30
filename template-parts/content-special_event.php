@@ -23,13 +23,6 @@
 
     <div class="entry-content">
         <?php
-            if ( ! is_archive() ) {
-                printf( '<h2 id="date">Dates: %1$s</h2>',
-                    get_special_event_date_format( $post )
-                );
-                // speakers
-            }
-
             /* translators: %s: Name of current post */
             the_content( sprintf(
                 __( 'Continue reading<span class="screen-reader-text"> "%s"</span>', 'twentysixteen' ),
@@ -52,7 +45,7 @@
     </div><!-- .entry-content -->
 
     <footer class="entry-footer">
-        <?php special_event_entry_meta(); ?>
+        <?php do_action( 'special_event_entry_meta' ); ?>
         <?php
             edit_post_link(
                 sprintf(
