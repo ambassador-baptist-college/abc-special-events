@@ -131,20 +131,59 @@ function get_special_event_date_format( $post ) {
     $begin_date = DateTime::createFromFormat( 'Ymd', get_field( 'begin_date' ) );
     $begin_date_formatted = $begin_date->format( 'F j' );
 
+    // time
+    $begin_time = get_field( 'begin_time' );
+    $end_time = get_field( 'end_time' );
+
+    // time for microdata
+    if ( $begin_time ) {
+        if ( strpos( $begin_time, ' AM') !== false ) {
+            $begin_time_microdata = explode( ':', str_replace( ' AM', '', $begin_time ) );
+            $begin_hour = $begin_time_microdata[0];
+            $begin_minute = $begin_time_microdata[1];
+        } elseif ( strpos( $begin_time, ' PM' ) !== false ) {
+            $begin_time_microdata = explode( ':', str_replace( ' PM', '', $begin_time ) );
+            $begin_hour = $begin_time_microdata[0] + 12;
+            $begin_minute = $begin_time_microdata[1];
+        }
+    }
+
+    // format
     if ( get_field( 'end_date' ) ) {
         $end_date = DateTime::createFromFormat( 'Ymd', get_field( 'end_date' ) );
 
-        if ( $begin_date->format( 'Y' ) != $end_date->format( 'Y' ) ) {
-            $begin_date_formatted .= $begin_date->format( ', Y' );
-        }
         $end_date_formatted = $end_date->format( 'j, Y' );
         if ( $begin_date->format( 'm' ) != $end_date->format( 'm' ) ) {
             $end_date_formatted = $end_date->format( 'F ' ) . $end_date_formatted;
         }
         $end_date_formatted = '&ndash;' . $end_date_formatted;
     } else {
+        $begin_date_formatted .= ', ' . $begin_date->format( 'Y' );
         $end_date_formatted = NULL;
+
+        if ( $begin_time ) {
+            $begin_date_formatted .= ', ' . $begin_time;
+        }
+        if ( $end_time ) {
+            $begin_date_formatted .= '&ndash;' . $end_time;
+        }
     }
 
-    return $begin_date_formatted . $end_date_formatted;
+    // microdata
+    $microdata = '<script type="application/ld+json">
+        {
+          "@context": "http://www.schema.org",
+          "@type": "Event",
+          "name": "' . get_the_title() . '",
+          "url": "' . get_permalink() . '",
+          "description": "' . get_the_excerpt() . '",
+          "startDate": "' . $begin_date->format( 'Y-m-dT' ) . ( get_field( 'begin_time' ) ? $begin_hour . ':' . $begin_minute : '12:00' ) . '",
+          "location": {
+            "@type": "Place",
+            "name": "' . strtok( get_field( 'location' )['address'], ',' ) . '"
+          }
+        }
+         </script>';
+
+    return $begin_date_formatted . $end_date_formatted . $microdata;
 }
