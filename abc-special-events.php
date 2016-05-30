@@ -103,6 +103,7 @@ function sort_special_events_by_date( $query ) {
         $query->set( 'meta_key', 'begin_date' );
         $query->set( 'meta_value', date( 'Ymd' ) );
         $query->set( 'meta_compare', '>=' );
+        $query->set( 'type', 'NUMERIC' );
         $query->set( 'meta_query', $meta_query );
     }
 
