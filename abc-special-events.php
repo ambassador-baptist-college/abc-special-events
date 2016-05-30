@@ -87,10 +87,23 @@ add_filter( 'get_the_archive_title', 'filter_special_event_page_title' );
 
 // Sort archive
 function sort_special_events_by_date( $query ) {
-    if ( is_post_type_archive( 'special_event' ) && ! is_admin() ) {
-        $query->set( 'orderby',     'meta_value_num' );
-        $query->set( 'order',       'ASC' );
-        $query->set( 'meta_key',    'begin_date' );
+    if ( is_post_type_archive( 'special_event' ) && $query->is_main_query() && ! is_admin() ) {
+        $meta_query = $query->get( 'meta_query' );
+
+        $meta_query[] = array(
+            'begin_date_clause' => array(
+                'meta_key'  => 'begin_date',
+                'compare'   => 'EXISTS',
+        ));
+
+        $query->set( 'orderby', array(
+            'begin_date_clause ASC',
+            'end_date ASC',
+        ));
+        $query->set( 'meta_key', 'begin_date' );
+        $query->set( 'meta_value', date( 'Ymd' ) );
+        $query->set( 'meta_compare', '>=' );
+        $query->set( 'meta_query', $meta_query );
     }
 
     return $query;
