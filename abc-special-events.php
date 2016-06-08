@@ -293,6 +293,7 @@ function abc_special_speakers_shortcode( $atts ) {
 
     return abc_speakers_for_shortcode( get_field( 'special_speaker' ), $atts );
 }
+add_shortcode( 'special_speaker', 'abc_special_speakers_shortcode' );
 add_shortcode( 'special_speakers', 'abc_special_speakers_shortcode' );
 
 // Shortcode for speakers
@@ -306,6 +307,7 @@ function abc_keynote_speakers_shortcode( $atts ) {
 
     return abc_speakers_for_shortcode( get_field( 'keynote_speaker' ), $atts );
 }
+add_shortcode( 'keynote_speaker', 'abc_keynote_speakers_shortcode' );
 add_shortcode( 'keynote_speakers', 'abc_keynote_speakers_shortcode' );
 
 // Helper function for shortcodes
