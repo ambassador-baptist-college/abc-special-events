@@ -106,7 +106,7 @@ add_action( 'admin_enqueue_scripts', 'add_speaker_backend_js' );
 // add custom image sizes
 add_action( 'after_setup_theme', 'abc_custom_image_sizes_speakers' );
 function abc_custom_image_sizes_speakers() {
-    add_image_size( 'special-event-sidebar-s', 240, 180, true );
-    add_image_size( 'special-event-sidebar-m', 360, 270, true );
-    add_image_size( 'special-event-sidebar-l', 480, 360, true );
+    add_image_size( 'special-event-sidebar-s', 180, 240, true );
+    add_image_size( 'special-event-sidebar-m', 270, 360, true );
+    add_image_size( 'special-event-sidebar-l', 360, 480, true );
 }
