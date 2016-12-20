@@ -155,8 +155,7 @@ function print_special_event_meta_info() {
 
     // keynote speakers
     if ( get_field( 'keynote_speaker' ) ) {
-        echo '<h3>Keynote Speakers</h3>
-        <ul class="event-speakers">';
+        echo '<h3>Keynote Speakers</h3>';
 
         $speaker_args = array(
             'post_type'              => 'special_speaker',
@@ -176,19 +175,16 @@ function print_special_event_meta_info() {
         if ( $special_speaker_query->have_posts() ) {
             while ( $special_speaker_query->have_posts() ) {
                 $special_speaker_query->the_post();
-                echo '<li title="' . get_the_excerpt() . '">' . get_the_title() . '</li>';
+                echo get_featured_speaker_info( get_the_ID() );
             }
         }
 
         wp_reset_query();
-
-        echo '</ul>';
     }
 
     // speakers
     if ( get_field( 'special_speaker' ) ) {
-        echo '<h3>Special Speakers</h3>
-        <ul class="event-speakers">';
+        echo '<h3>Special Speakers</h3>';
 
         $speaker_args = array(
             'post_type'              => 'special_speaker',
@@ -208,13 +204,11 @@ function print_special_event_meta_info() {
         if ( $special_speaker_query->have_posts() ) {
             while ( $special_speaker_query->have_posts() ) {
                 $special_speaker_query->the_post();
-                echo '<li title="' . get_the_excerpt() . '">' . get_the_title() . '</li>';
+                echo get_featured_speaker_info( get_the_ID() );
             }
         }
 
         wp_reset_query();
-
-        echo '</ul>';
     }
 }
 add_action( 'special_event_entry_meta', 'print_special_event_meta_info' );
@@ -342,4 +336,14 @@ function abc_speakers_for_shortcode( $speakers_array, $atts ) {
     wp_reset_query();
 
     return $output;
+}
+
+function get_featured_speaker_info( $id ) {
+    echo '<figure class="event-speaker">';
+    if ( has_post_thumbnail( $id ) ) {
+        echo '<a href="' . get_permalink( $id ) . '" target="_blank">' . get_the_post_thumbnail( $id, 'special-event-sidebar-s' ) . '</a>';
+    }
+    echo '<figcaption><a href="' . get_permalink( $id ) . '" target="_blank">' . get_the_title( $id ) . '</a><br/>
+    ' . get_the_excerpt( $id ) . '</figcaption>
+    </figure>';
 }
