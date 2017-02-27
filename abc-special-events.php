@@ -344,6 +344,6 @@ function get_featured_speaker_info( $id ) {
         echo '<a href="' . get_permalink( $id ) . '" target="_blank">' . get_the_post_thumbnail( $id, 'special-event-sidebar-s' ) . '</a>';
     }
     echo '<figcaption><a href="' . get_permalink( $id ) . '" target="_blank">' . get_the_title( $id ) . '</a><br/>
-    ' . get_the_excerpt( $id ) . '</figcaption>
+    <span class="wp-caption-text">' . get_the_excerpt( $id ) . '</span></figcaption>
     </figure>';
 }
