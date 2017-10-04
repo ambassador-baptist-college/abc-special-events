@@ -175,7 +175,7 @@ function print_special_event_meta_info() {
         if ( $special_speaker_query->have_posts() ) {
             while ( $special_speaker_query->have_posts() ) {
                 $special_speaker_query->the_post();
-                echo get_featured_speaker_info( get_the_ID() );
+                echo get_featured_speaker_info( get_the_ID(), $special_speaker_query->found_posts );
             }
         }
 
@@ -204,7 +204,7 @@ function print_special_event_meta_info() {
         if ( $special_speaker_query->have_posts() ) {
             while ( $special_speaker_query->have_posts() ) {
                 $special_speaker_query->the_post();
-                echo get_featured_speaker_info( get_the_ID() );
+                echo get_featured_speaker_info( get_the_ID(), $special_speaker_query->found_posts );
             }
         }
 
@@ -338,12 +338,26 @@ function abc_speakers_for_shortcode( $speakers_array, $atts ) {
     return $output;
 }
 
-function get_featured_speaker_info( $id ) {
-    echo '<figure class="event-speaker">';
+/**
+ * Get featured speaker content
+ * @param  integer $id         special event post ID
+ * @param  integer $post_count number of speakers
+ * @return string  HTML content
+ */
+function get_featured_speaker_info( $id, $post_count ) {
+    if ( $post_count >= 6 ) {
+        $size = 'half-width';
+    }
+
+    ob_start();
+
+    echo '<figure class="event-speaker ' . $size . '">';
     if ( has_post_thumbnail( $id ) ) {
         echo '<a href="' . get_permalink( $id ) . '" target="_blank">' . get_the_post_thumbnail( $id, 'special-event-sidebar-s' ) . '</a>';
     }
     echo '<figcaption><a href="' . get_permalink( $id ) . '" target="_blank">' . get_the_title( $id ) . '</a><br/>
     <span class="wp-caption-text">' . get_the_excerpt( $id ) . '</span></figcaption>
     </figure>';
+
+    return ob_get_clean();
 }
