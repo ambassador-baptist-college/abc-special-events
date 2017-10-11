@@ -155,7 +155,6 @@ function print_special_event_meta_info() {
 
     // keynote speakers
     if ( get_field( 'keynote_speaker' ) ) {
-        echo '<h3>Keynote Speakers</h3>';
 
         $speaker_args = array(
             'post_type'              => 'special_speaker',
@@ -173,6 +172,8 @@ function print_special_event_meta_info() {
         $special_speaker_query = new WP_Query( $speaker_args );
 
         if ( $special_speaker_query->have_posts() ) {
+            echo '<h3>Keynote Speaker' . ( $special_speaker_query->post_count === 1 ? '' : 's' ) . '</h3>';
+
             while ( $special_speaker_query->have_posts() ) {
                 $special_speaker_query->the_post();
                 echo get_featured_speaker_info( get_the_ID(), $special_speaker_query->found_posts );
@@ -184,7 +185,6 @@ function print_special_event_meta_info() {
 
     // speakers
     if ( get_field( 'special_speaker' ) ) {
-        echo '<h3>Special Speakers</h3>';
 
         $speaker_args = array(
             'post_type'              => 'special_speaker',
@@ -202,6 +202,8 @@ function print_special_event_meta_info() {
         $special_speaker_query = new WP_Query( $speaker_args );
 
         if ( $special_speaker_query->have_posts() ) {
+            echo '<h3>Special Speaker' . ( $special_speaker_query->post_count === 1 ? '' : 's' ) . '</h3>';
+
             while ( $special_speaker_query->have_posts() ) {
                 $special_speaker_query->the_post();
                 echo get_featured_speaker_info( get_the_ID(), $special_speaker_query->found_posts );
