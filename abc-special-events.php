@@ -44,7 +44,7 @@ function special_events_post_type() {
         'filter_items_list'     => 'Filter special events list',
     );
     $rewrite = array(
-        'slug'                  => 'news-events/event',
+        'slug'                  => 'news/event',
         'with_front'            => true,
         'pages'                 => true,
         'feeds'                 => true,
