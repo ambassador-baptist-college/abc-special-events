@@ -90,21 +90,23 @@ function sort_special_events_by_date( $query ) {
     if ( is_post_type_archive( 'special_event' ) && $query->is_main_query() && ! is_admin() ) {
         $meta_query = $query->get( 'meta_query' );
 
-        $meta_query[] = array(
-            'begin_date_clause' => array(
-                'meta_key'  => 'begin_date',
-                'compare'   => 'EXISTS',
-        ));
+        if ( is_array( $meta_query ) ) {
+            $meta_query[] = array(
+                'begin_date_clause' => array(
+                    'meta_key'  => 'begin_date',
+                    'compare'   => 'EXISTS',
+            ));
 
-        $query->set( 'orderby', array(
-            'begin_date_clause ASC',
-            'end_date ASC',
-        ));
-        $query->set( 'meta_key', 'begin_date' );
-        $query->set( 'meta_value', date( 'Ymd' ) );
-        $query->set( 'meta_compare', '>=' );
-        $query->set( 'type', 'NUMERIC' );
-        $query->set( 'meta_query', $meta_query );
+            $query->set( 'orderby', array(
+                'begin_date_clause ASC',
+                'end_date ASC',
+            ));
+            $query->set( 'meta_key', 'begin_date' );
+            $query->set( 'meta_value', date( 'Ymd' ) );
+            $query->set( 'meta_compare', '>=' );
+            $query->set( 'type', 'NUMERIC' );
+            $query->set( 'meta_query', $meta_query );
+        }
     }
 
     return $query;
