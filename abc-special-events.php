@@ -141,7 +141,7 @@ function print_special_event_meta_info() {
         printf( '<h3>%1$s</h3>
         <p class="event-dates">%2$s</p>',
                 get_field( 'end_date' ) ? 'Dates' : 'Date',
-                get_special_event_date_format( $post )
+                get_special_event_date_format()
         );
     }
 
@@ -218,7 +218,7 @@ function print_special_event_meta_info() {
 add_action( 'special_event_entry_meta', 'print_special_event_meta_info' );
 
 // Helper function to format dates
-function get_special_event_date_format( $post ) {
+function get_special_event_date_format() {
     // date
     $begin_date = DateTime::createFromFormat( 'Ymd', get_field( 'begin_date' ) );
     $begin_date_formatted = $begin_date->format( 'F j' );
@@ -349,6 +349,8 @@ function abc_speakers_for_shortcode( $speakers_array, $atts ) {
  * @return string  HTML content
  */
 function get_featured_speaker_info( $id, $post_count ) {
+    $size = '';
+
     if ( $post_count >= 6 ) {
         $size = 'half-width';
     }
