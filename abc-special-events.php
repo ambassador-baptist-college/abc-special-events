@@ -296,7 +296,7 @@ function get_special_event_date_format() {
 					"@type": "Place",
 					"name": "%s",
 					"address": "%s"
-				}
+				},
 				"image": "%s",
 				"performer": "%s"
 			}
