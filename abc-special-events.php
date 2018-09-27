@@ -261,7 +261,7 @@ function get_special_event_date_format() {
 			$begin_date_formatted .= '&ndash;' . $end_time;
 		}
 
-		$end_date_microdata = $begin_date->format( 'Y-m-dT' ) . empty( $begin_time ) ? '12:00' : $begin_hour . ':' . $begin_minute;
+		$end_date_microdata = $begin_date->format( 'Y-m-dT' ) . ( empty( $begin_time ) ? '12:00' : $begin_hour . ':' . $begin_minute );
 	}
 
 	$begin_date_microdata = $begin_date->format( 'Y-m-dT' ) . ( get_field( 'begin_time' ) ? $begin_hour . ':' . $begin_minute : '12:00' );
