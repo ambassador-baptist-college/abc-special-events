@@ -249,6 +249,7 @@ function get_special_event_date_format() {
 			$end_date_formatted = $end_date->format( 'F ' ) . $end_date_formatted;
 		}
 		$end_date_formatted = '&ndash;' . $end_date_formatted;
+		$end_date_microdata = $end_date->format( 'Y-m-dT' ) . ( empty( $end_time ) ? '12:00' : $end_hour . ':' . $end_minute );
 	} else {
 		$begin_date_formatted .= ', ' . $begin_date->format( 'Y' );
 		$end_date_formatted = NULL;
@@ -259,23 +260,40 @@ function get_special_event_date_format() {
 		if ( $end_time ) {
 			$begin_date_formatted .= '&ndash;' . $end_time;
 		}
+
+		$end_date_microdata = $begin_date->format( 'Y-m-dT' ) . empty( $begin_time ) ? '12:00' : $begin_hour . ':' . $begin_minute;
 	}
 
+	$begin_date_microdata = $begin_date->format( 'Y-m-dT' ) . ( get_field( 'begin_time' ) ? $begin_hour . ':' . $begin_minute : '12:00' );
+
+	$location = get_field( 'location' );
+
 	// microdata
-	$microdata = '<script type="application/ld+json">
-		{
-		  "@context": "http://www.schema.org",
-		  "@type": "Event",
-		  "name": "' . get_the_title() . '",
-		  "url": "' . get_permalink() . '",
-		  "description": "' . get_the_excerpt() . '",
-		  "startDate": "' . $begin_date->format( 'Y-m-dT' ) . ( get_field( 'begin_time' ) ? $begin_hour . ':' . $begin_minute : '12:00' ) . '",
-		  "location": {
-			"@type": "Place",
-			"name": "' . strtok( get_field( 'location' )['address'], ',' ) . '"
-		  }
-		}
-		 </script>';
+	$microdata = sprintf(
+		'<script type="application/ld+json">
+			{
+				"@context": "http://www.schema.org",
+				"@type": "Event",
+				"name": "%s",
+				"url": "%s",
+				"description": "%s",
+				"startDate": "%s",
+				"endDate": "%s",
+				"location": {
+					"@type": "Place",
+					"name": "%s",
+					"address": "%s"
+				}
+			}
+		</script>',
+		get_the_title(),
+		get_permalink(),
+		str_replace( '"', '\'', wp_strip_all_tags( get_the_excerpt() ) ),
+		$begin_date_microdata,
+		$end_date_microdata,
+		strtok( $location['address'], ',' ),
+		$location['address']
+	);
 
 	return $begin_date_formatted . $end_date_formatted . $microdata;
 }
