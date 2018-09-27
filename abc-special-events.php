@@ -268,6 +268,19 @@ function get_special_event_date_format() {
 
 	$location = get_field( 'location' );
 
+	// Speakers.
+	$special_speakers = (array) get_field( 'special_speaker' );
+	$keynote_speakers = (array) get_field( 'keynote_speaker' );
+
+	$speaker_ids   = array_merge( $special_speakers, $keynote_speakers );
+	$speaker_names = array();
+
+	foreach ( $speaker_ids as $speaker ) {
+		if ( ! empty( $speaker ) ) {
+			$speaker_names[] = get_the_title( $speaker );
+		}
+	}
+
 	// microdata
 	$microdata = sprintf(
 		'<script type="application/ld+json">
@@ -284,6 +297,8 @@ function get_special_event_date_format() {
 					"name": "%s",
 					"address": "%s"
 				}
+				"image": "%s",
+				"performer": "%s"
 			}
 		</script>',
 		get_the_title(),
@@ -292,7 +307,9 @@ function get_special_event_date_format() {
 		$begin_date_microdata,
 		$end_date_microdata,
 		strtok( $location['address'], ',' ),
-		$location['address']
+		$location['address'],
+		get_the_post_thumbnail_url(),
+		implode( ', ', $speaker_names )
 	);
 
 	return $begin_date_formatted . $end_date_formatted . $microdata;
