@@ -53,7 +53,7 @@ function special_speakers_post_type() {
         'label'                 => 'Special Speaker',
         'description'           => 'Special Speakers',
         'labels'                => $labels,
-        'supports'              => array( 'title', 'editor', 'thumbnail', 'custom-fields', 'page-attributes', ),
+        'supports'              => array( 'title', 'editor', 'thumbnail', 'custom-fields', 'page-attributes', 'excerpt', ),
         'hierarchical'          => true,
         'public'                => true,
         'show_ui'               => true,

@@ -320,7 +320,8 @@ function abc_special_speakers_shortcode( $atts ) {
 	global $post;
 
 	$atts = shortcode_atts( array(
-		'align'     => 'left',
+		'align'    => 'left',
+		'show_bio' => false,
 	), $atts, 'special_speakers' );
 	$shortcode_output = NULL;
 
@@ -334,7 +335,8 @@ function abc_keynote_speakers_shortcode( $atts ) {
 	global $post;
 
 	$atts = shortcode_atts( array(
-		'align'     => 'left',
+		'align'    => 'left',
+		'show_bio' => false,
 	), $atts, 'keynote_speakers' );
 	$shortcode_output = NULL;
 
@@ -371,13 +373,16 @@ function abc_speakers_for_shortcode( $speakers_array, $atts ) {
 		while ( $special_speaker_query->have_posts() ) {
 			$special_speaker_query->the_post();
 			$output .= '<figure class="wp-caption align' . $atts['align'] . '">
-				' . get_the_post_thumbnail( get_the_ID(), 'faculty' ) . '
-				<figcaption class="wp-caption-text">' . get_the_title() . '</figcaption>
-			</figure>';
+				' . get_the_post_thumbnail( get_the_ID(), 'faculty', array( 'class' => 'align' . $atts['align'] ) ) . '
+				<figcaption class="wp-caption-text">' . get_the_title();
+			if ( $atts['show_bio'] ) {
+				$output .= '<br/>' . get_the_content();
+			}
+			$output .= '</figcaption></figure>';
 		}
 	}
 
-	wp_reset_query();
+	wp_reset_postdata();
 
 	return $output;
 }
@@ -403,7 +408,13 @@ function get_featured_speaker_info( $id, $post_count ) {
 	}
 	echo '<figcaption><a href="' . get_permalink( $id ) . '" target="_blank">' . get_the_title( $id ) . '</a><br/>
 	<span class="wp-caption-text">' . get_the_excerpt( $id ) . '</span></figcaption>
-	</figure>';
+	';
+
+	if ( get_the_excerpt( $id ) !== get_the_content( $id ) ) {
+		echo '<a class="read-more" href="' . esc_url( get_permalink( $id ) ) . '">Read more&rarr;</a>';
+	}
+
+	echo '</figure>';
 
 	return ob_get_clean();
 }
