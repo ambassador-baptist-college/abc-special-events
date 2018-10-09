@@ -347,6 +347,11 @@ add_shortcode( 'keynote_speakers', 'abc_keynote_speakers_shortcode' );
 function abc_speakers_for_shortcode( $speakers_array, $atts ) {
 	$output = NULL;
 
+	// Bail if there are no speakers to show.
+	if ( empty( $speakers_array ) ) {
+		return '';
+	}
+
 	$speaker_args = array(
 		'post_type'              => 'special_speaker',
 		'post_status'            => 'publish',
