@@ -67,6 +67,7 @@ function special_events_post_type() {
 		'menu_icon'           => 'dashicons-calendar-alt',
 		'show_in_admin_bar'   => true,
 		'show_in_nav_menus'   => true,
+		'show_in_rest'        => true,
 		'can_export'          => true,
 		'has_archive'         => 'news/events/all',
 		'exclude_from_search' => false,
