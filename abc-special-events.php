@@ -196,15 +196,8 @@ function print_special_event_meta_info() {
 		);
 	}
 
-	// Display speakers or not.
-	if ( get_field( 'display_speakers_in_sidebar' ) ) {
-		$display_speakers = true;
-	} else {
-		$display_speakers = false;
-	}
-
 	// Keynote speakers.
-	if ( $display_speakers && get_field( 'keynote_speaker' ) ) {
+	if ( get_field( 'keynote_speaker' ) ) {
 
 		$speaker_args = array(
 			'post_type'              => 'special_speaker',
@@ -234,7 +227,7 @@ function print_special_event_meta_info() {
 	}
 
 	// Speakers.
-	if ( $display_speakers && get_field( 'special_speaker' ) ) {
+	if ( get_field( 'special_speaker' ) ) {
 
 		$speaker_args = array(
 			'post_type'              => 'special_speaker',

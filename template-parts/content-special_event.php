@@ -21,7 +21,7 @@
 
 	<?php twentysixteen_post_thumbnail(); ?>
 
-	<div class="entry-content">
+	<div class="entry-content <?php echo ( get_field( 'show-sidebar' ) ? 'sidebar' : 'no-sidebar' ); ?>">
 		<?php
 			/* translators: %s: Name of current post */
 			the_content(
@@ -49,17 +49,20 @@
 	</div><!-- .entry-content -->
 
 	<footer class="entry-footer">
-		<?php do_action( 'special_event_entry_meta' ); ?>
 		<?php
-			edit_post_link(
-				sprintf(
-					/* translators: %s: Name of current post */
-					__( 'Edit<span class="screen-reader-text"> "%s"</span>', 'twentysixteen' ),
-					get_the_title()
-				),
-				'<span class="edit-link">',
-				'</span>'
-			);
-			?>
+		// Display sidebar or not.
+		if ( get_field( 'show-sidebar' ) ) {
+			do_action( 'special_event_entry_meta' );
+		}
+		edit_post_link(
+			sprintf(
+				/* translators: %s: Name of current post */
+				__( 'Edit<span class="screen-reader-text"> "%s"</span>', 'twentysixteen' ),
+				get_the_title()
+			),
+			'<span class="edit-link">',
+			'</span>'
+		);
+		?>
 	</footer><!-- .entry-footer -->
 </article><!-- #post-## -->
