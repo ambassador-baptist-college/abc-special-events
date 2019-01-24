@@ -162,7 +162,7 @@ add_filter( 'archive_template', 'get_special_event_archive_template' );
 function get_special_event_single_template( $single_template ) {
 	global $post;
 
-	if ( 'special_event' == $post->post_type ) {
+	if ( 'special_event' === $post->post_type ) {
 		$single_template = dirname( __FILE__ ) . '/single-special_event.php';
 	}
 	return $single_template;
