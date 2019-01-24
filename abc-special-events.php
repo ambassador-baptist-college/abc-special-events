@@ -177,11 +177,13 @@ add_filter( 'single_template', 'get_special_event_single_template' );
 function print_special_event_meta_info() {
 	// Date.
 	if ( get_field( 'begin_date' ) ) {
+		$date = get_special_event_date_format();
+
 		printf(
 			'<h3>%1$s</h3>
 		<p class="event-dates">%2$s</p>',
 			get_field( 'end_date' ) ? 'Dates' : 'Date',
-			get_special_event_date_format()
+			$date['human']
 		);
 	}
 
@@ -258,17 +260,37 @@ function print_special_event_meta_info() {
 }
 add_action( 'special_event_entry_meta', 'print_special_event_meta_info' );
 
-// Helper function to format dates
+/**
+ * Append microdata to event content.
+ *
+ * @param string $content Post content.
+ *
+ * @return string         Post content.
+ */
+function abc_special_event_microdata( $content ) {
+	if ( 'special_event' === get_post_type() ) {
+		$date = get_special_event_date_format();
+	}
+
+	return $content . $date['microdata'];
+}
+add_filter( 'the_content', 'abc_special_event_microdata' );
+
+/**
+ * Format dates.
+ *
+ * @return array Human-readable and JSON-LD time data.
+ */
 function get_special_event_date_format() {
-	// date
+	// date.
 	$begin_date           = DateTime::createFromFormat( 'Ymd', get_field( 'begin_date' ) );
 	$begin_date_formatted = $begin_date->format( 'F j' );
 
-	// time
+	// time.
 	$begin_time = get_field( 'begin_time' );
 	$end_time   = get_field( 'end_time' );
 
-	// time for microdata
+	// time for microdata.
 	if ( $begin_time ) {
 		if ( strpos( $begin_time, ' AM' ) !== false ) {
 			$begin_time_microdata = explode( ':', str_replace( ' AM', '', $begin_time ) );
@@ -281,7 +303,7 @@ function get_special_event_date_format() {
 		}
 	}
 
-	// format
+	// Format.
 	if ( get_field( 'end_date' ) ) {
 		$end_date = DateTime::createFromFormat( 'Ymd', get_field( 'end_date' ) );
 
@@ -322,7 +344,7 @@ function get_special_event_date_format() {
 		}
 	}
 
-	// microdata
+	// Microdata.
 	$microdata = sprintf(
 		'<script type="application/ld+json">
 			{
@@ -353,7 +375,10 @@ function get_special_event_date_format() {
 		implode( ', ', $speaker_names )
 	);
 
-	return $begin_date_formatted . $end_date_formatted . $microdata;
+	return array(
+		'human' => $begin_date_formatted . $end_date_formatted,
+		'json'  => $microdata,
+	);
 }
 
 // Shortcode for speakers
