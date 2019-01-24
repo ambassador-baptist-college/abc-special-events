@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Plugin Name: ABC Special Events
  * Plugin URI: https://github.com/ambassador-baptist-college/abc-special-events/
  * Description: Special Events
@@ -7,16 +7,21 @@
  * Author: AndrewRMinion Design
  * Author URI: https://andrewrminion.com
  * GitHub Plugin URI: https://github.com/ambassador-baptist-college/abc-special-events/
+ *
+ * @package abc
  */
 
-if (!defined('ABSPATH')) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Register Custom Post Type
+/**
+ * Register CPT.
+ *
+ * @return void
+ */
 function special_events_post_type() {
-
-	$labels = array(
+	$labels  = array(
 		'name'                  => 'Special Events',
 		'singular_name'         => 'Special Event',
 		'menu_name'             => 'Special Events',
@@ -44,40 +49,47 @@ function special_events_post_type() {
 		'filter_items_list'     => 'Filter special events list',
 	);
 	$rewrite = array(
-		'slug'                  => 'news/event',
-		'with_front'            => true,
-		'pages'                 => true,
-		'feeds'                 => true,
+		'slug'       => 'news/event',
+		'with_front' => true,
+		'pages'      => true,
+		'feeds'      => true,
 	);
-	$args = array(
-		'label'                 => 'Special Event',
-		'description'           => 'Special Events',
-		'labels'                => $labels,
-		'supports'              => array( 'title', 'editor', 'thumbnail', 'custom-fields', 'page-attributes', 'excerpt', ),
-		'hierarchical'          => true,
-		'public'                => true,
-		'show_ui'               => true,
-		'show_in_menu'          => true,
-		'menu_position'         => 20,
-		'menu_icon'             => 'dashicons-calendar-alt',
-		'show_in_admin_bar'     => true,
-		'show_in_nav_menus'     => true,
-		'can_export'            => true,
-		'has_archive'           => 'news/events/all',
-		'exclude_from_search'   => false,
-		'publicly_queryable'    => true,
-		'rewrite'               => $rewrite,
-		'capability_type'       => 'page',
+	$args    = array(
+		'label'               => 'Special Event',
+		'description'         => 'Special Events',
+		'labels'              => $labels,
+		'supports'            => array( 'title', 'editor', 'thumbnail', 'custom-fields', 'page-attributes', 'excerpt' ),
+		'hierarchical'        => true,
+		'public'              => true,
+		'show_ui'             => true,
+		'show_in_menu'        => true,
+		'menu_position'       => 20,
+		'menu_icon'           => 'dashicons-calendar-alt',
+		'show_in_admin_bar'   => true,
+		'show_in_nav_menus'   => true,
+		'can_export'          => true,
+		'has_archive'         => 'news/events/all',
+		'exclude_from_search' => false,
+		'publicly_queryable'  => true,
+		'rewrite'             => $rewrite,
+		'capability_type'     => 'page',
 	);
 	register_post_type( 'special_event', $args );
 
 }
 add_action( 'init', 'special_events_post_type', 0 );
 
-// Modify the page title
-function filter_special_event_page_title( $title, $id = NULL ) {
+/**
+ * Modify the page title
+ *
+ * @param string $title Page title.
+ * @param int    $id    Post ID.
+ *
+ * @return string       Page title.
+ */
+function filter_special_event_page_title( $title, $id = null ) {
 	if ( is_post_type_archive( 'special_event' ) ) {
-		  $title = 'Special Events';
+		$title = 'Special Events';
 	}
 
 	return $title;
@@ -85,7 +97,13 @@ function filter_special_event_page_title( $title, $id = NULL ) {
 add_filter( 'custom_title', 'filter_special_event_page_title' );
 add_filter( 'get_the_archive_title', 'filter_special_event_page_title' );
 
-// Sort archive
+/**
+ * Sort archive.
+ *
+ * @param WP_Query $query Query object.
+ *
+ * @return WP_Query       Query object.
+ */
 function sort_special_events_by_date( $query ) {
 	if ( is_post_type_archive( 'special_event' ) && $query->is_main_query() && ! is_admin() ) {
 		$meta_query = $query->get( 'meta_query' );
@@ -93,14 +111,18 @@ function sort_special_events_by_date( $query ) {
 		if ( is_array( $meta_query ) ) {
 			$meta_query[] = array(
 				'begin_date_clause' => array(
-					'meta_key'  => 'begin_date',
-					'compare'   => 'EXISTS',
-			));
+					'meta_key' => 'begin_date',
+					'compare'  => 'EXISTS',
+				),
+			);
 
-			$query->set( 'orderby', array(
-				'begin_date_clause ASC',
-				'end_date ASC',
-			));
+			$query->set(
+				'orderby',
+				array(
+					'begin_date_clause ASC',
+					'end_date ASC',
+				)
+			);
 			$query->set( 'meta_key', 'begin_date' );
 			$query->set( 'meta_value', date( 'Ymd' ) );
 			$query->set( 'meta_compare', '>=' );
@@ -113,17 +135,29 @@ function sort_special_events_by_date( $query ) {
 }
 add_filter( 'pre_get_posts', 'sort_special_events_by_date' );
 
-// Add custom archive template
+/**
+ * Add custom archive template.
+ *
+ * @param string $archive_template Template file.
+ *
+ * @return string                  Template file.
+ */
 function get_special_event_archive_template( $archive_template ) {
 	global $post;
-	if ( is_post_type_archive ( 'special_event' ) ) {
+	if ( is_post_type_archive( 'special_event' ) ) {
 		$archive_template = dirname( __FILE__ ) . '/archive-special_event.php';
 	}
 	return $archive_template;
 }
-add_filter( 'archive_template', 'get_special_event_archive_template' ) ;
+add_filter( 'archive_template', 'get_special_event_archive_template' );
 
-// Add custom single template
+/**
+ * Add custom single template.
+ *
+ * @param string $single_template Path to template file.
+ *
+ * @return string                 Path to template file.
+ */
 function get_special_event_single_template( $single_template ) {
 	global $post;
 
@@ -134,24 +168,30 @@ function get_special_event_single_template( $single_template ) {
 }
 add_filter( 'single_template', 'get_special_event_single_template' );
 
-// Add custom entry meta
+/**
+ * Add custom entry meta.
+ *
+ * @return void
+ */
 function print_special_event_meta_info() {
-	// date
+	// Date.
 	if ( get_field( 'begin_date' ) ) {
-		printf( '<h3>%1$s</h3>
+		printf(
+			'<h3>%1$s</h3>
 		<p class="event-dates">%2$s</p>',
-				get_field( 'end_date' ) ? 'Dates' : 'Date',
-				get_special_event_date_format()
+			get_field( 'end_date' ) ? 'Dates' : 'Date',
+			get_special_event_date_format()
 		);
 	}
 
-	// location
+	// Location.
 	if ( get_field( 'location' ) ) {
 		$location = get_field( 'location' );
 
-		printf( '<h3>Location</h3>
+		printf(
+			'<h3>Location</h3>
 		<p class="location"><a href="https://www.google.com/maps/search/%1$s" target="_blank">%1$s</a></p>',
-			   $location['address']
+			$location['address']
 		);
 	}
 
@@ -178,15 +218,14 @@ function print_special_event_meta_info() {
 
 			while ( $special_speaker_query->have_posts() ) {
 				$special_speaker_query->the_post();
-				echo get_featured_speaker_info( get_the_ID(), $special_speaker_query->found_posts );
+				echo wp_kses_post( get_featured_speaker_info( get_the_ID(), $special_speaker_query->found_posts ) );
 			}
 		}
 
-		wp_reset_query();
+		wp_reset_postdata();
 	}
 
-	// speakers
-	if ( get_field( 'special_speaker' ) ) {
+	// Speakers.
 
 		$speaker_args = array(
 			'post_type'              => 'special_speaker',
@@ -204,15 +243,15 @@ function print_special_event_meta_info() {
 		$special_speaker_query = new WP_Query( $speaker_args );
 
 		if ( $special_speaker_query->have_posts() ) {
-			echo '<h3>Special Speaker' . ( $special_speaker_query->post_count === 1 ? '' : 's' ) . '</h3>';
+			echo '<h3>Special Speaker' . ( 1 === $special_speaker_query->post_count ? '' : 's' ) . '</h3>';
 
 			while ( $special_speaker_query->have_posts() ) {
 				$special_speaker_query->the_post();
-				echo get_featured_speaker_info( get_the_ID(), $special_speaker_query->found_posts );
+				echo wp_kses_post( get_featured_speaker_info( get_the_ID(), $special_speaker_query->found_posts ) );
 			}
 		}
 
-		wp_reset_query();
+		wp_reset_postdata();
 	}
 }
 add_action( 'special_event_entry_meta', 'print_special_event_meta_info' );
@@ -220,23 +259,23 @@ add_action( 'special_event_entry_meta', 'print_special_event_meta_info' );
 // Helper function to format dates
 function get_special_event_date_format() {
 	// date
-	$begin_date = DateTime::createFromFormat( 'Ymd', get_field( 'begin_date' ) );
+	$begin_date           = DateTime::createFromFormat( 'Ymd', get_field( 'begin_date' ) );
 	$begin_date_formatted = $begin_date->format( 'F j' );
 
 	// time
 	$begin_time = get_field( 'begin_time' );
-	$end_time = get_field( 'end_time' );
+	$end_time   = get_field( 'end_time' );
 
 	// time for microdata
 	if ( $begin_time ) {
-		if ( strpos( $begin_time, ' AM') !== false ) {
+		if ( strpos( $begin_time, ' AM' ) !== false ) {
 			$begin_time_microdata = explode( ':', str_replace( ' AM', '', $begin_time ) );
-			$begin_hour = $begin_time_microdata[0];
-			$begin_minute = $begin_time_microdata[1];
+			$begin_hour           = $begin_time_microdata[0];
+			$begin_minute         = $begin_time_microdata[1];
 		} elseif ( strpos( $begin_time, ' PM' ) !== false ) {
 			$begin_time_microdata = explode( ':', str_replace( ' PM', '', $begin_time ) );
-			$begin_hour = $begin_time_microdata[0] + 12;
-			$begin_minute = $begin_time_microdata[1];
+			$begin_hour           = $begin_time_microdata[0] + 12;
+			$begin_minute         = $begin_time_microdata[1];
 		}
 	}
 
@@ -252,7 +291,7 @@ function get_special_event_date_format() {
 		$end_date_microdata = $end_date->format( 'Y-m-dT' ) . ( empty( $end_time ) ? '12:00' : $end_hour . ':' . $end_minute );
 	} else {
 		$begin_date_formatted .= ', ' . $begin_date->format( 'Y' );
-		$end_date_formatted = NULL;
+		$end_date_formatted    = null;
 
 		if ( $begin_time ) {
 			$begin_date_formatted .= ', ' . $begin_time;
@@ -319,11 +358,15 @@ function get_special_event_date_format() {
 function abc_special_speakers_shortcode( $atts ) {
 	global $post;
 
-	$atts = shortcode_atts( array(
-		'align'    => 'left',
-		'show_bio' => false,
-	), $atts, 'special_speakers' );
-	$shortcode_output = NULL;
+	$atts             = shortcode_atts(
+		array(
+			'align'    => 'left',
+			'show_bio' => false,
+		),
+		$atts,
+		'special_speakers'
+	);
+	$shortcode_output = null;
 
 	return abc_speakers_for_shortcode( get_field( 'special_speaker' ), $atts );
 }
@@ -334,11 +377,15 @@ add_shortcode( 'special_speakers', 'abc_special_speakers_shortcode' );
 function abc_keynote_speakers_shortcode( $atts ) {
 	global $post;
 
-	$atts = shortcode_atts( array(
-		'align'    => 'left',
-		'show_bio' => false,
-	), $atts, 'keynote_speakers' );
-	$shortcode_output = NULL;
+	$atts             = shortcode_atts(
+		array(
+			'align'    => 'left',
+			'show_bio' => false,
+		),
+		$atts,
+		'keynote_speakers'
+	);
+	$shortcode_output = null;
 
 	return abc_speakers_for_shortcode( get_field( 'keynote_speaker' ), $atts );
 }
@@ -347,7 +394,7 @@ add_shortcode( 'keynote_speakers', 'abc_keynote_speakers_shortcode' );
 
 // Helper function for shortcodes
 function abc_speakers_for_shortcode( $speakers_array, $atts ) {
-	$output = NULL;
+	 $output = null;
 
 	// Bail if there are no speakers to show.
 	if ( empty( $speakers_array ) ) {
@@ -389,6 +436,7 @@ function abc_speakers_for_shortcode( $speakers_array, $atts ) {
 
 /**
  * Get featured speaker content
+ *
  * @param  integer $id         special event post ID
  * @param  integer $post_count number of speakers
  * @return string  HTML content
